@@ -1,0 +1,15 @@
+{
+  "name": "hottie",
+  "version": "1.0.0",
+  "description": "A little bot to help order food.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andre Sato",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.7.0",
+    "restify": "^4.3.0"
+  }
+}
