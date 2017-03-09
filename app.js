@@ -1,10 +1,12 @@
+
+require('dotenv-extended').load();
+
 var restify = require('restify');
 var builder = require('botbuilder');
 var levelup = require('levelup')
 var dateFormat = require('dateformat');
-var EventSource = require('eventsource');
 
-require('dotenv-extended').load();
+
 
 //=========================================================
 // Bot Setup
@@ -31,7 +33,6 @@ if(orders == null) {
 
 server.listen(3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
-   console.log('connecting to: %s', process.env.LUIS_MODEL_URL);
 });
   
 // Create chat bot
@@ -40,21 +41,17 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 var bot = new builder.UniversalBot(connector);
+server.post('/', connector.listen());
 server.post('/api/messages', connector.listen());
+server.post('/v3/conversations', connector.listen());
 
 server.get('/echo/:name', function (req, res, next) {
-	console.log("req: %s", JSON.stringify(req));
+	console.log("req: %s", JSON.stringify(req.body));
 	res.send(req.params);
 	return next();
 });
 
-var stream = new EventSource('https://andre.sato@arctouch.com:arctouch-11@stream.flowdock.com/flows?filter=d0ceea03-e19b-4706-89cf-a95947ddb435');
-stream.onmessage = function(event) {
-  var message = JSON.parse(event.data);
-  var request = {};
-  request.type = "message";
-  console.log(JSON.stringify(message));
-};
+
 
 //=========================================================
 // Bots Dialogs
