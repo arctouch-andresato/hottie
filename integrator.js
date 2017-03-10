@@ -72,6 +72,7 @@ function getMessages(waterMarkNumber, threadId) {
 						getMessages(waterMarkNumber, threadId);
 					}, 500);
 				} else {
+					waterMark = parseInt(obj.watermark);
 					sendMessageToFlowdock(obj.messages[0].text, threadId);
 				}
 			} else {
@@ -86,7 +87,6 @@ function startListeningStream() {
 		var request = {
 			type: "message"
 		};
-		console.log(JSON.stringify(message));
 		if(message.event == 'message'){
 			console.log("sending message from %s as %s", message.user, message.content);
 			if(!message.content.startsWith('[bot]')) {
@@ -102,13 +102,13 @@ function startListeningStream() {
 function sendMessageToFlowdock(message, threadId) {
 	console.log("Message[%s], ThreadId[%s]", message,threadId);
 	var flowdockClient = restify.createJsonClient ({
-		url : "https://api.flowdock.com/flows/arctouch/test-flow"
+		url : "https://api.flowdock.com"
 	});
 	flowdockClient.basicAuth('andre.sato@arctouch.com', 'arctouch-11');
-	flowdockClient.post('/threads/' + threadId + '/messages', 
+	flowdockClient.post('/flows/arctouch/test-flow/threads/' + threadId + '/messages', 
 		{
-			'\"event\"' : '\"message\"',
-			'\"content\"' : '\"[bot]' + message + "\""
+			'event' : 'message',
+			'content' : '[bot] ' + message 
 		}, function (err,req,res) {
 			if(err) {
 
